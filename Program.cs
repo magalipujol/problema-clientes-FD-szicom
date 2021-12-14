@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,29 +11,31 @@ namespace problema_clientes_FD_szicom
     {
         static void Main(string[] args)
         {
-            string csvPath = "C:/Users/magalip/source/repos/problema-clientes-FD-szicom/clientes.txt";
-            // CHECK el @ va o no va?
-            string txtPath = "C:/Users/magalip/Documents/Datos problema/Datos Problemas/ventana_dia.txt";
+            string txtPath = "C:/Users/magalip/Documents/Datos problema/Datos Problemas/clientes.txt";
 
-            TXTToCSV(csvPath, txtPath);
-            
-            string[] csvLines = File.ReadAllLines(csvPath);
-            Console.WriteLine(csvLines[0]);
+
+            var clientes = TXTToCSV(txtPath);
+            foreach (var client in clientes)
+            {
+                Console.WriteLine($"{client.Id}, {client.Mercado}, {client.NombreCliente}");
+            }
+
         }
 
-        public static void TXTToCSV(string csvPath, string txtPath)
+        // TODO this should be for all classes
+        public static List<Cliente> TXTToCSV(string txtPath)
         {
             string[] lines = File.ReadAllLines(txtPath);
+            List<Cliente> clientes = new List<Cliente>();
             foreach (string line in lines)
             {
-                var parts = line.Split(' ');
-                string csvLine = string.Join(',', parts);
-                Console.WriteLine(csvLine);
-                File.AppendAllText(csvPath, csvLine + Environment.NewLine);
+                string[] csvLine = line.Split('	');
+                clientes.Add(new Cliente { Id = csvLine[0], Mercado = csvLine[1], NombreCliente = csvLine[2] });
+                // TODO esto va a tener que pedir que tipo de clase quiere y usar el metodo segun la clase
             }
+            return clientes;
         }
 
-        // TODO create csv to object
         // TODO create all classes
     }
 }
